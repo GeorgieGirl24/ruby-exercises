@@ -10,7 +10,6 @@ class Dragon
   end
 
   def name
-    # require 'pry'; binding.pry
     @name
   end
 
@@ -20,8 +19,9 @@ class Dragon
 
   def eat
     @count += 1
-
-    if @count == 3
+    if count < 3
+      @hungry = true
+    else
       @hungry = false
     end
   end
