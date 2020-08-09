@@ -1,32 +1,22 @@
 class Pirate
-  attr_reader :name, :job, :heinous_act, :booty
-  def initialize(name, job = "Scallywag")
+  attr_accessor :name, :job, :cursed, :heinous_act, :booty
+  def initialize(name, job="Scallywag", cursed=false, booty=0)
     @name = name
     @job = job
     @cursed = false
     @heinous_act = 0
-    @booty = 0
-  end
-
-  def job
-    @job
+    @booty = booty
   end
 
   def cursed?
-    if @heinous_act >= 3
-      @cursed = true
-    end
+    @cursed = @heinous_act >= 3
   end
 
   def commit_heinous_act
     @heinous_act += 1
   end
 
-  def has_booty
-    @booty
-  end
-
   def rob
     @booty += 100
-  end
+  end 
 end
