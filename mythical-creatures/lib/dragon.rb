@@ -1,29 +1,19 @@
 
 class Dragon
-  attr_reader :name, :color, :rider, :count, :hungry
-  def initialize(name, color, rider)
+  attr_accessor :name, :color, :rider, :hungry, :eat
+  def initialize(name, color, rider, hungry=true)
     @name = name
     @color = color
     @rider = rider
-    @hungry = true
-    @count = 0
-  end
-
-  def name
-    @name
+    @eat = 0
+    @hungry = hungry
   end
 
   def hungry?
-    hungry
+    @hungry = @eat < 3
   end
 
   def eat
-    @count += 1
-    if count < 3
-      @hungry = true
-    else
-      @hungry = false
-    end
+    @eat += 1
   end
-
 end
