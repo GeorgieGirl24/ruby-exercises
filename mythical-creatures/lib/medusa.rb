@@ -11,20 +11,26 @@ class Medusa
   end
 
   def statues
+    @statues.each do |statue|
+      if statue.inventory[:items] == 'mirror'
+        @statues.shift
+        statue.stoned = false
+      end
+    end
     if @statues.count > 3
-      freedom = @statues.shift
-      freedom.stoned = false
+      @statues.shift.stoned = false
     end
     @statues
   end
 end
 
 class Person
-  attr_accessor :name, :stoned, :count
+  attr_accessor :name, :stoned, :count, :inventory
   def initialize(name, stoned=false)
     @name = name
     @stoned = stoned
     @count = 0
+    @inventory = {}
   end
 
   def stoned?
