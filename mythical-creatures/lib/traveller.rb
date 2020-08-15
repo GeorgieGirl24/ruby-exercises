@@ -15,6 +15,8 @@ class Traveller
       quests << part1
       quests << part2
       @coin_purse += 1
+    else
+      raise ArgumentError.new("Wrong kind of quest")
     end
     quests.each do |quest|
       quest.length == 2
@@ -77,9 +79,17 @@ class Traveller
 
   def give_item(someone_else, item)
     someone_else.inventory[:magic_items] = item
-    if someone_else.inventory[:magic_items] = "wolfsbane"
+    if someone_else.inventory[:magic_items].include?("pizza")
+      someone_else.protection = false
+      someone_else.protected?
+    elsif someone_else.inventory[:magic_items] = "wolfsbane"
+      someone_else.protection = true
       someone_else.inventory.delete(:magic_items)
-      p someone_else.protection = true
+      someone_else.protected?
     end
+  end
+
+  def finale
+    'I rock'
   end
 end
