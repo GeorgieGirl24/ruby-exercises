@@ -1,7 +1,7 @@
 gem 'minitest', '~> 5.2'
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lib/pegasus'
+require_relative '../lib/gnome'
 
 class GnomeTest < Minitest::Test
   def test_it_exists
@@ -11,21 +11,21 @@ class GnomeTest < Minitest::Test
   end
 
   def test_it_has_a_name
-    skip
+    # skip
     gob = Gnome.new("Gob")
 
     assert_equal "Gob", gob.name
   end
 
   def test_it_has_a_job_by_default
-    skip
+    # skip
     gob = Gnome.new("Gob")
 
     assert "Protecter of the Earth", gob.job
   end
 
   def test_it_has_treasures_to_guard
-    skip
+    # skip
     gob = Gnome.new("Gob")
     items = {:items => ["iron ore", "rubies", "crystals"]}
 
@@ -33,41 +33,42 @@ class GnomeTest < Minitest::Test
   end
 
   def test_it_can_dig_for_more_treasure
-    skip
+    # skip
     gob = Gnome.new("Gob")
     gob.dig
+    items = {:items => ["iron ore", "rubies", "crystals"]}
 
     assert items, gob.treasures
   end
 
   def test_it_cant_be_that_easy
-    skip
+    # skip
     gob = Gnome.new("Gob")
+    gob.rewarded?
+    refute gob.rewarded?
     10.times do
       gob.dig
     end
-
-    assert rewarded?
-    gob.get_reward
-    reward = "silver"
+    assert gob.rewarded?
+    gob.get_reward("silver")
     items = {:items => ["iron ore", "rubies", "crystals", "silver"]}
     assert_equal items, gob.treasures
   end
 
   def test_it_carries_a_sword
-    skip
+    # skip
     gob = Gnome.new("Gob")
-    joyuse = Sword.new("Joyuse", "titanium")
+    joyuse = Sword.new("Joyuse", "titanium", gob)
     assert_equal [], joyuse.components
     gob << joyuse
-
-    assert sheath_occupied?
+    assert_equal [joyuse], gob.sheath
+    assert gob.sheath_occupied?
   end
 
   def test_it_can_trade_upgrades_to_sword_with_treasure
-    skip
+    # skip
     gob = Gnome.new("Gob")
-    joyuse = Sword.new("Joyuse", "titanium")
+    joyuse = Sword.new("Joyuse", "titanium", gob)
     gob << joyuse
     swordsmith = Swordsmith.new("Masamune")
     items = {:items => ["valyrian steel", "garnet", "ash"]}
@@ -77,27 +78,22 @@ class GnomeTest < Minitest::Test
     10.times do
       gob.dig
     end
-    assert rewarded?
-    gob.get_reward
-    reward = "silver"
-    10.times do
-      gob.dig
-    end
-
-    assert rewarded?
-    gob.get_reward
-    reward = "silver"
+    assert gob.rewarded?
+    gob.get_reward("silver")
     items = {:items => ["iron ore", "rubies", "crystals", "silver"]}
+    assert_equal items, gob.treasures
+    gob.trade(swordsmith, "silver")
+    items = {:items => ["iron ore", "rubies", "crystals"]}
+    assert_equal items, gob.treasures
     gob.upgrade
-    refute sheath_occupied?
-    assert_equal {:items => ["iron ore", "rubies", "crystals"]}, gob.inventory
+    refute gob.sheath_occupied?
     swordsmith << joyuse
-    swordsmith.improve
+    assert_equal [joyuse], swordsmith.holdings
+    swordsmith.improve(gob)
     items = {:items => ["garnet", "ash", "silver"]}
-    assert sheath_occupied?
-  end
-
-
+    assert_equal items, swordsmith.inventory
+    assert gob.sheath_occupied?
+    assert_equal ["valyrian steel"], joyuse.components
   end
 
   def test_it_ward_off_a_person_from_stealing_the_treasure
